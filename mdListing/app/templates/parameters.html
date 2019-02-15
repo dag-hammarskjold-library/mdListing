@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+    {% block content %}
+    <div class="container form-group">
+        <form method="POST"  action="{{url_for('fullcontent')}}">
+            <div class="raw form-group">
+                  <div class="col form-group">
+                    <label for="body">Body</label>
+                    <input type="text" class="form-control" id="body" name="body">
+                  </div>
+                  <div class="col form-group">
+                    <label for="session">Session</label>
+                    <input type="text" class="form-control" id="session" name="session">
+                  </div>
+                  <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </form> 
+    </div>
+    {% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+    {% block content %}
+    <script>
+        $(function() {
+            $('button').click(function() {
+                $.ajax({
+                    url: '/fullcontentplus',
+                    data: $('form').serialize(),
+                    type: 'POST',
+                    beforeSend:function (){
+                            $.blockUI({ css: { 
+                                    border: 'none', 
+                                    padding: '15px', 
+                                    backgroundColor: '#000', 
+                                    '-webkit-border-radius': '10px', 
+                                    '-moz-border-radius': '10px', 
+                                    opacity: .5, 
+                                    color: '#fff' 
+                                } ,
+                    })
+                    },
+                    
+                    success: function(response) {
+                        console.log(response);
+                        $.unblockUI();
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    },
+                    complete: function (){
+                        $.unblockUI();
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="container mt-4 mb-4 shadow-lg">
+        <br>
+        <form class="form-inline" action="{{url_for('fullcontent')}}" method="POST" role="form">
+              <div class="form-group">
+                <label for="body"> Body</label>
+                <input type="text" class="form-control" id="body" name="body">
+              </div>
+              <div class="form-group">
+                <label for="session">Year</label>
+                <input type="session" class="form-control" id="session" name="session">
+              </div>
+              <button id="showresult" value="showresult" type="submit" class="btn btn-default">show result</button>
+            </form> 
+        <br>
+    </div>
+    <div class="container mt-4 mb-4 shadow-lg">
+        <h1> Full Contents <span class="badge badge-pill badge-success"> {{count}} </span> records </h1>
+        <h6> Execution Time : {{myTime}} secondes </h6>
+        <hr>
+        {% for ls in lst_pv %}
+        <div class=" shadow-lg">
+            <h5> Created : {{ ls["created"] }} </h5>
+            <h5> Symbol : {{ ls["symbol"] }} </h5>
+            <h5> Link : <a href='{{ls["link"]}}' target="_blank"> {{ls["link"]}} </a> </h5>
+            <h5> Date : {{ ls["date"] }} </h5>
+            <h5> Title : {{ ls["title_a"] }} {{ ls["title_b"] }}  </h5>
+             {% if ls["topic"] %}
+                <h5> Topic : {{ ls["topic"] }} </h5>
+            {% endif %}
+            <hr>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% endblock %}

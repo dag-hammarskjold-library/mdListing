@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+    {% block content %}
+    <div class="container mt-4 mb-4 shadow-lg">
+        <h1> Full Contents : <span class="badge badge-pill badge-success"> {{count}} </span> records </h1>
+        <h6> Execution Time : {{myTime}} secondes </h1>
+        <hr>
+        {% for ls in lst_pv %}
+        <div class=" shadow-lg">
+            <h5> Created : {{ ls["created"] }} </h5>
+            <h5> Symbol : {{ ls["symbol"] }} </h5>
+            <h5> Link : <a href='{{ls["link"]}}' target="_blank"> {{ls["link"]}} </a> </h5>
+            <h5> Date : {{ ls["date"] }} </h5>
+            <h5> Title : {{ ls["title_a"] }} {{ ls["title_b"] }}  </h5>
+             {% if ls["topic"] %}
+                <h5> Topic : {{ ls["topic"] }} </h5>
+            {% endif %}
+            <hr>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+    {% endblock %}
