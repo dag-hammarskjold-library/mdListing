@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, abort, jsonify, Response, url_for
 from requests import get
 from bson.objectid import ObjectId
-from config import Config
+from .config import Config
 import boto3, re, time, os, pymongo
 from bson.son import SON
 from bson.regex import Regex
@@ -23,13 +23,17 @@ lst_pv=[]
 dict_pv={}
 
 def find_tag_sub_val(tag,code,val):
+    #d = SON(data={'code':code, 'value': val})
     regex_val = SON(data={'$regex':Regex(val), '$options': 'i'})
     return_data = {
         'datafield': {
             '$elemMatch': {
                 'tag': tag,
-                'subfield.code': code,
-                'subfield.value': regex_val.to_dict()
+                'subfield': {
+                    '$elemMatch':{
+                        'code':code,'value': regex_val.to_dict()
+                    }
+                }    
             }
         }
     }
@@ -44,6 +48,15 @@ def generateSet(body,session):
             find_tag_sub_val('191','a',body),
             find_tag_sub_val('992','a',session)
                 ]
+    }
+
+    queryAAO = {
+        '$and': [
+            find_tag_sub_val('191','a',body),{
+            '$or':[
+            find_tag_sub_val('992','a',session),
+            find_tag_sub_val('269','a',session)
+                ]}]
     }
 
     for doc1 in bib_collection.find(queryAA):  
@@ -89,6 +102,7 @@ def fullcontentplus():
     return(render_template('fullcontentplus.html'))
 
 # Main 
+
 if __name__ == '__main__':
     app.debug=False
     app.run()
